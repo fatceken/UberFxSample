@@ -1,6 +1,7 @@
 package http
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -9,8 +10,10 @@ func (h *handler) registerRoutes() {
 }
 
 func (h *handler) hello(w http.ResponseWriter, r *http.Request) {
-	h.logger.Info("hello called")
 
+	h.logger.Info("sd")
+
+	response := fmt.Sprint(h.settings.FooSettings.Name, h.settings.FooSettings.Description)
 	w.WriteHeader(200)
-	w.Write([]byte(h.settings.BarSettings.IsEnabled))
+	w.Write([]byte(response))
 }

@@ -1,5 +1,0 @@
-AppSettings :
-  FooSettings:
-    description: dev
-  BarSettings:
-    isenabled: false

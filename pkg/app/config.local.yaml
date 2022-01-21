@@ -1,4 +1,4 @@
-AppSettings :
+AppSettings:
   FooSettings:
     description: local
   BarSettings:

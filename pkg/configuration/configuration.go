@@ -39,7 +39,6 @@ func BindConfigToOptions(configKey string, optionsType reflect.Type) fx.Option {
 
 	funcType := reflect.FuncOf([]reflect.Type{viperType, optionsType}, []reflect.Type{errType}, false)
 	invokeFunc := reflect.MakeFunc(funcType, func(args []reflect.Value) (results []reflect.Value) {
-		log.Printf("loading options for " + optionsType.String())
 		optPtr := reflect.New(optionsType).Elem()
 		optPtr.Set(args[1])
 		args = []reflect.Value{
@@ -47,7 +46,6 @@ func BindConfigToOptions(configKey string, optionsType reflect.Type) fx.Option {
 			reflect.ValueOf(configKey),
 			optPtr,
 		}
-		log.Printf("args %v", args)
 		return reflect.ValueOf(viperutils.UnmarshalSub).Call(args)
 	})
 

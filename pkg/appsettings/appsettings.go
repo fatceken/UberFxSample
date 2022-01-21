@@ -12,8 +12,8 @@ type AppSettings struct {
 }
 
 type FooSettings struct {
-	Name       string
-	Descripton string
+	Name        string
+	Description string
 }
 
 type BarSettings struct {
