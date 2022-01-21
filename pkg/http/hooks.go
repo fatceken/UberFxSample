@@ -8,7 +8,7 @@ import (
 	"uberfxsample/pkg/config"
 )
 
-func RegisterHooks(lifecycle fx.Lifecycle, logger *zap.SugaredLogger, cfg *config.Config, mux *http.ServeMux) {
+func registerHooks(lifecycle fx.Lifecycle, logger *zap.SugaredLogger, cfg *config.Config, mux *http.ServeMux) {
 	lifecycle.Append(
 		fx.Hook{
 			OnStart: func(context.Context) error {

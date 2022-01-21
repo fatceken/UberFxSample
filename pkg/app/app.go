@@ -4,7 +4,7 @@ import (
 	"go.uber.org/fx"
 	"net/http"
 	"uberfxsample/pkg/config"
-	httphandler "uberfxsample/pkg/http"
+	httpServer "uberfxsample/pkg/http"
 	"uberfxsample/pkg/logger"
 )
 
@@ -19,7 +19,6 @@ func CreateCoreOptions(preInitOpts ...fx.Option) []fx.Option {
 		logger.Module(),
 		config.Module(),
 		fx.Provide(http.NewServeMux),
-		fx.Invoke(httphandler.New),
-		fx.Invoke(httphandler.RegisterHooks),
+		httpServer.Module(),
 	}
 }

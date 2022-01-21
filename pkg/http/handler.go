@@ -1,33 +1,28 @@
 package http
 
 import (
+	"go.uber.org/fx"
 	"net/http"
 
 	"go.uber.org/zap"
 )
 
-// Handler for http requests
-type Handler struct {
+func Module() fx.Option {
+	return fx.Invoke(
+		createHandler,
+		registerHooks,
+	)
+}
+
+// handler for http requests
+type handler struct {
 	mux    *http.ServeMux
 	logger *zap.SugaredLogger
 }
 
-// New http handler
-func New(s *http.ServeMux, l *zap.SugaredLogger) *Handler {
-	h := Handler{s, l}
+func createHandler(s *http.ServeMux, l *zap.SugaredLogger) *handler {
+	h := handler{s, l}
 	h.registerRoutes()
 
 	return &h
-}
-
-// RegisterRoutes for all http endpoints
-func (h *Handler) registerRoutes() {
-	h.mux.HandleFunc("/", h.hello)
-}
-
-func (h *Handler) hello(w http.ResponseWriter, r *http.Request) {
-	h.logger.Info("hello called")
-
-	w.WriteHeader(200)
-	w.Write([]byte("Hello World"))
 }
