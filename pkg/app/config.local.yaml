@@ -1,0 +1,5 @@
+AppSettings :
+  FooSettings:
+    description: local
+  BarSettings:
+    isenabled: true

@@ -1,0 +1,6 @@
+AppSettings :
+  FooSettings:
+    name: foo
+  BarSettings:
+    port: 1234
+  Address: :8080

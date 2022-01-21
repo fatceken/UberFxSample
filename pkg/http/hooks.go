@@ -5,14 +5,14 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 	"net/http"
-	"uberfxsample/pkg/config"
+	"uberfxsample/pkg/appsettings"
 )
 
-func registerHooks(lifecycle fx.Lifecycle, logger *zap.SugaredLogger, cfg *config.Config, mux *http.ServeMux) {
+func registerHooks(lifecycle fx.Lifecycle, logger *zap.SugaredLogger, s *appsettings.AppSettings, mux *http.ServeMux) {
 	lifecycle.Append(
 		fx.Hook{
 			OnStart: func(context.Context) error {
-				go http.ListenAndServe(cfg.ApplicationConfig.Address, mux)
+				go http.ListenAndServe(s.Address, mux)
 				return nil
 			},
 			OnStop: func(context.Context) error {
