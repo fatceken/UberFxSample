@@ -30,7 +30,7 @@ func CreateCoreOptions(preInitOpts ...fx.Option) []fx.Option {
 		configuration.Module(),
 		appsettings.Module(),
 		fx.Provide(http.NewServeMux),
-		httpServer.Module(),
+		httpServer.Module(false),
 	}
 }
 

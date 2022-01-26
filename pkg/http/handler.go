@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"go.uber.org/fx"
 	"net/http"
 	"uberfxsample/pkg/appsettings"
@@ -8,7 +9,10 @@ import (
 	"go.uber.org/zap"
 )
 
-func Module() fx.Option {
+var isUnitTesting = false
+
+func Module(isTesting bool) fx.Option {
+	isUnitTesting = isTesting
 	return fx.Invoke(
 		createHandler,
 		registerHooks,
@@ -27,4 +31,21 @@ func createHandler(s *http.ServeMux, l *zap.SugaredLogger, as *appsettings.AppSe
 	h.registerRoutes()
 
 	return &h
+}
+
+func registerHooks(lifecycle fx.Lifecycle, logger *zap.SugaredLogger, s *appsettings.AppSettings, mux *http.ServeMux) {
+	lifecycle.Append(
+		fx.Hook{
+			OnStart: func(context.Context) error {
+				go http.ListenAndServe(s.Address, mux)
+				return nil
+			},
+			OnStop: func(context.Context) error {
+				if isUnitTesting {
+					return nil
+				}
+				return logger.Sync()
+			},
+		},
+	)
 }

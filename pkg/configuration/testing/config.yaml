@@ -1,0 +1,6 @@
+AppSettings:
+  FooSettings:
+    name: fooTest
+  BarSettings:
+    port: 5678
+  Address: :9070

@@ -31,27 +31,6 @@ func createOptions() *Options {
 	return &Options{}
 }
 
-func BindConfigToOptions(configKey string, optionsType reflect.Type) fx.Option {
-	var v *viper.Viper
-	viperType := reflect.TypeOf(v)
-	var err *error
-	errType := reflect.TypeOf(err).Elem()
-
-	funcType := reflect.FuncOf([]reflect.Type{viperType, optionsType}, []reflect.Type{errType}, false)
-	invokeFunc := reflect.MakeFunc(funcType, func(args []reflect.Value) (results []reflect.Value) {
-		optPtr := reflect.New(optionsType).Elem()
-		optPtr.Set(args[1])
-		args = []reflect.Value{
-			args[0],
-			reflect.ValueOf(configKey),
-			optPtr,
-		}
-		return reflect.ValueOf(viperutils.UnmarshalSub).Call(args)
-	})
-
-	return fx.Invoke(invokeFunc.Interface())
-}
-
 func createConfig(options *Options) (*viper.Viper, error) {
 	const stageKey = "STAGE"
 
@@ -80,6 +59,27 @@ func createConfig(options *Options) (*viper.Viper, error) {
 	}
 
 	return viperConfig, nil
+}
+
+func BindConfigToOptions(configKey string, optionsType reflect.Type) fx.Option {
+	var v *viper.Viper
+	viperType := reflect.TypeOf(v)
+	var err *error
+	errType := reflect.TypeOf(err).Elem()
+
+	funcType := reflect.FuncOf([]reflect.Type{viperType, optionsType}, []reflect.Type{errType}, false)
+	invokeFunc := reflect.MakeFunc(funcType, func(args []reflect.Value) (results []reflect.Value) {
+		optPtr := reflect.New(optionsType).Elem()
+		optPtr.Set(args[1])
+		args = []reflect.Value{
+			args[0],
+			reflect.ValueOf(configKey),
+			optPtr,
+		}
+		return reflect.ValueOf(viperutils.UnmarshalSub).Call(args)
+	})
+
+	return fx.Invoke(invokeFunc.Interface())
 }
 
 func toIOReader(files []fs.File) []io.Reader {

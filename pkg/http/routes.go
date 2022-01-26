@@ -6,12 +6,12 @@ import (
 )
 
 func (h *handler) registerRoutes() {
-	h.mux.HandleFunc("/", h.hello)
+	h.mux.HandleFunc("/hello", h.hello)
 }
 
 func (h *handler) hello(w http.ResponseWriter, r *http.Request) {
 
-	h.logger.Info("sd")
+	h.logger.Info("hello world")
 
 	response := fmt.Sprint(h.settings.FooSettings.Name, h.settings.FooSettings.Description)
 	w.WriteHeader(200)
