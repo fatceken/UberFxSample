@@ -5,6 +5,7 @@ import (
 	"go.uber.org/fx"
 	"net/http"
 	"uberfxsample/pkg/appsettings"
+	"uberfxsample/pkg/rediscache"
 
 	"go.uber.org/zap"
 )
@@ -21,19 +22,20 @@ func Module(isTesting bool) fx.Option {
 
 // handler for http requests
 type handler struct {
-	mux      *http.ServeMux
-	logger   *zap.SugaredLogger
-	settings *appsettings.AppSettings
+	mux         *http.ServeMux
+	logger      *zap.SugaredLogger
+	settings    *appsettings.AppSettings
+	cacheHelper *rediscache.Helper
 }
 
-func createHandler(s *http.ServeMux, l *zap.SugaredLogger, as *appsettings.AppSettings) *handler {
-	h := handler{s, l, as}
+func createHandler(s *http.ServeMux, l *zap.SugaredLogger, as *appsettings.AppSettings, cacheHelper *rediscache.Helper) *handler {
+	h := handler{s, l, as, cacheHelper}
 	h.registerRoutes()
 
 	return &h
 }
 
-func registerHooks(lifecycle fx.Lifecycle, logger *zap.SugaredLogger, s *appsettings.AppSettings, mux *http.ServeMux) {
+func registerHooks(lifecycle fx.Lifecycle, logger *zap.SugaredLogger, s *appsettings.AppSettings, mux *http.ServeMux, cacheHelper *rediscache.Helper) {
 	lifecycle.Append(
 		fx.Hook{
 			OnStart: func(context.Context) error {
@@ -41,6 +43,7 @@ func registerHooks(lifecycle fx.Lifecycle, logger *zap.SugaredLogger, s *appsett
 				return nil
 			},
 			OnStop: func(context.Context) error {
+				cacheHelper.Close()
 				if isUnitTesting {
 					return nil
 				}

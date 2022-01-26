@@ -8,6 +8,7 @@ import (
 	"uberfxsample/pkg/configuration"
 	httpServer "uberfxsample/pkg/http"
 	"uberfxsample/pkg/logger"
+	"uberfxsample/pkg/rediscache"
 )
 
 //go:embed config.yaml config.*.yaml
@@ -31,6 +32,7 @@ func CreateCoreOptions(preInitOpts ...fx.Option) []fx.Option {
 		appsettings.Module(),
 		fx.Provide(http.NewServeMux),
 		httpServer.Module(false),
+		rediscache.Module(),
 	}
 }
 
