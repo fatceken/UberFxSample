@@ -18,7 +18,7 @@ func (h *handler) hello(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(response))
 }
 
-//http://localhost:8080/addToCache2?key=foo&value=bar
+//http://localhost:8080/addToCache?key=foo&value=bar
 func (h *handler) addToCache(w http.ResponseWriter, r *http.Request) {
 	key := r.URL.Query().Get("key")
 	if key == "" {

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"testing"
 	"uberfxsample/pkg/appsettings"
+	"uberfxsample/pkg/rediscache"
 )
 
 func TestModule(t *testing.T) {
@@ -20,6 +21,9 @@ func TestModule(t *testing.T) {
 			return &appsettings.AppSettings{
 				Address: "8080",
 			}
+		}),
+		fx.Provide(func() *rediscache.Helper {
+			return &rediscache.Helper{}
 		}),
 		Module(true),
 	)

@@ -43,11 +43,14 @@ func registerHooks(lifecycle fx.Lifecycle, logger *zap.SugaredLogger, s *appsett
 				return nil
 			},
 			OnStop: func(context.Context) error {
-				cacheHelper.Close()
 				if isUnitTesting {
 					return nil
 				}
-				return logger.Sync()
+				err := logger.Sync()
+				if err != nil {
+					return err
+				}
+				return cacheHelper.Close()
 			},
 		},
 	)
