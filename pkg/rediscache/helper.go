@@ -2,12 +2,13 @@ package rediscache
 
 import (
 	"context"
-	"github.com/go-redis/redis/v8"
 	"time"
+
+	"github.com/go-redis/redis/v8"
 )
 
 type Helper struct {
-	client *redis.Client
+	client IRedis
 }
 
 func (helper Helper) Add(key string, value interface{}, expiration time.Duration) error {
@@ -31,4 +32,10 @@ func (helper Helper) Get(key string) (interface{}, error) {
 
 func (helper Helper) Close() error {
 	return helper.client.Close()
+}
+
+type IRedis interface {
+	Set(ctx context.Context, key string, value interface{}, expiration time.Duration) *redis.StatusCmd
+	Get(ctx context.Context, key string) *redis.StringCmd
+	Close() error
 }
